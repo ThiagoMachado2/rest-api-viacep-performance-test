@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de API ViaCEP</title>
+    <script>
+        async function consultarCep() {
+            // Pegando o valor do campo CEP
+            const cep = document.getElementById("cep").value;
+
+            // Definindo a URL da API (ajuste o endpoint da sua API conforme necessário)
+            const url = `http://localhost:8081/api/cep/${cep}`;
+
+            try {
+                // Fazendo a requisição GET usando fetch
+                const response = await fetch(url);
+
+                // Verificando se a resposta foi bem-sucedida
+                if (response.ok) {
+                    const data = await response.json();
+
+                    // Exibindo os dados na página
+                    document.getElementById("resultado").innerHTML = `
+                        <p><strong>CEP:</strong> ${data.cep}</p>
+                        <p><strong>Logradouro:</strong> ${data.logradouro}</p>
+                        <p><strong>Bairro:</strong> ${data.bairro}</p>
+                        <p><strong>Localidade:</strong> ${data.localidade}</p>
+                        <p><strong>UF:</strong> ${data.uf}</p>
+                    `;
+                } else {
+                    document.getElementById("resultado").innerHTML = `<p>CEP não encontrado.</p>`;
+                }
+            } catch (error) {
+                console.error("Erro ao consultar o CEP:", error);
+                document.getElementById("resultado").innerHTML = `<p>Erro ao consultar o CEP. Verifique se o servidor está ativo.</p>`;
+            }
+        }
+    </script>
+</head>
+<body>
+<h1>Teste de Consulta ViaCEP</h1>
+
+<form onsubmit="event.preventDefault(); consultarCep();">
+    <label for="cep">Digite o CEP:</label>
+    <input type="text" id="cep" name="cep" placeholder="Ex: 01001000" required>
+    <button type="submit">Consultar</button>
+</form>
+
+<h2>Resultado:</h2>
+<div id="resultado"></div>
+
+</body>
+</html>
